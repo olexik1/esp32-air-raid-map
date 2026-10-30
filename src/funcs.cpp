@@ -54,44 +54,47 @@ String RetrieveAlertInfo()
     return resultString;
 }
 
-void TurnOnLEDs(const String &alertString, CRGB leds[], int size)
+void TurnOnLEDs(const String &alertString, Adafruit_NeoPixel &pixels, int size)
 {
-    // An empty string indicates an error
-    if(alertString.isEmpty())
-    {
-        // Turn on the pulsing purple light on all LEDs
-        uint8_t bright = beatsin8(15, 10, 50); 
-        fill_solid(leds, size, CHSV(192, 255, bright));
-        FastLED.show();
+    pixels.clear();
 
+    // An empty string indicates an error
+    // Turn on the pulsing purple light on all LEDs
+    if (alertString.isEmpty())
+    {
+        for (int i = 0; i < size; i++)
+        {
+            pixels.setPixelColor(i, pixels.Color(128, 0, 128));
+        }
+        pixels.show();
         return;
     }
+
+    int limit = min((int)size + 1, (int)alertString.length());
 
     // Turn on the LEDs depending on received information about alerts
     // 'A' - Air raid alert is active throughout the region, turn on the red light
     // 'P' - Partial alert in certain districts or communities, turn on the yellow light
     // 'N' - No information available regarding an air raid alert, turn on the green light
-
-    int limit = min(size, (int)alertString.length());
-
     for (int i = 0; i < limit; ++i)
     {
+        int ledIndex = apiToLedMap[i]; 
+
         switch (alertString[i])
         {
             case 'A':
-                leds[i] = CRGB::Red;
+                pixels.setPixelColor(ledIndex, pixels.Color(255, 0, 0));
                 break;
             case 'P':
-                leds[i] = CRGB::Yellow;
+                pixels.setPixelColor(ledIndex, pixels.Color(255, 255, 0));
                 break;
             case 'N':
-                leds[i] = CRGB::Green;
+                pixels.setPixelColor(ledIndex, pixels.Color(0, 255, 0)); 
                 break;
             default:
-                leds[i] = CRGB::Black;
+                pixels.setPixelColor(ledIndex, pixels.Color(0, 0, 0)); 
                 break;
         }
     }
-
-    FastLED.show();
+    pixels.show();
 }
