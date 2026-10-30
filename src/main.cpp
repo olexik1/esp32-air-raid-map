@@ -57,20 +57,4 @@ void loop()
     TurnOnLEDs(currentAlerts, pixels, NUMPIXELS);
 
     delay(20);
-
-    // // Вмикаємо червоний
-    // for (int i = 0; i < NUMPIXELS; i++)
-    // {
-    //     pixels.setPixelColor(i, pixels.Color(255, 0, 0));
-    // }
-    // pixels.show();
-    // delay(1000);
-
-    // // Вмикаємо зелений
-    // for (int i = 0; i < NUMPIXELS; i++)
-    // {
-    //     pixels.setPixelColor(i, pixels.Color(0, 255, 0));
-    // }
-    // pixels.show();
-    // delay(1000);
 }
